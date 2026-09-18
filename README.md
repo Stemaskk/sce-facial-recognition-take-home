@@ -5,5 +5,40 @@ embedding, and match it against enrolled profiles via cosine similarity — runn
 locally, with a small web dashboard for enrolling people and viewing recognition
 results. FPGA acceleration of the embedding model is a stretch goal.
 
-> **Status:** just getting started — this README will fill in as the pipeline comes
-> together (tools used, setup steps, and why each piece was chosen).
+## Description
+
+TBD — will cover what the pipeline does end-to-end and the tools chosen for it (and why).
+
+## Visuals
+
+TBD — screenshots/GIF of the dashboard once it exists.
+
+## Installation
+
+TBD.
+
+## Usage
+
+TBD.
+
+## Roadmap
+
+- [ ] Detection + embedding pipeline
+- [ ] Local web dashboard (enroll profiles, run recognition)
+- [ ] Stretch: run the embedding model on an FPGA
+
+## Contributing
+
+Solo take-home project, not open to outside contributions.
+
+## Authors and Acknowledgment
+
+[Aiden Chung](https://github.com/Stemaskk)
+
+## License
+
+[MIT](LICENSE)
+
+## Project Status
+
+Active — just getting started.
