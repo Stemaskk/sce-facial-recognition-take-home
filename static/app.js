@@ -28,53 +28,43 @@ function showResult(el, text, cssClass) {
   el.className = `result ${cssClass}`;
 }
 
+const enrollFileInput = document.getElementById("enroll-file-input");
+const capturePreview = document.getElementById("capture-preview");
+let capturedEnrollBlob = null;
+
+enrollFileInput.addEventListener("change", () => {
+  // Choosing a file overrides any previously captured photo.
+  capturedEnrollBlob = null;
+  capturePreview.classList.add("hidden");
+});
+
 document.getElementById("enroll-form").addEventListener("submit", async (e) => {
   e.preventDefault();
   const form = e.target;
   const resultEl = document.getElementById("enroll-result");
 
-  const res = await fetch("/api/profiles", {
-    method: "POST",
-    body: new FormData(form),
-  });
+  const formData = new FormData();
+  formData.append("name", form.name.value);
+  if (capturedEnrollBlob) {
+    formData.append("image", capturedEnrollBlob, "capture.jpg");
+  } else if (enrollFileInput.files[0]) {
+    formData.append("image", enrollFileInput.files[0]);
+  } else {
+    showResult(resultEl, "Choose a file or capture a photo first", "no-match");
+    return;
+  }
+
+  const res = await fetch("/api/profiles", { method: "POST", body: formData });
   const data = await res.json();
 
   if (res.ok) {
     showResult(resultEl, `Enrolled "${data.name}" (id ${data.id})`, "match");
     form.reset();
+    capturedEnrollBlob = null;
+    capturePreview.classList.add("hidden");
     loadProfiles();
   } else {
     showResult(resultEl, `Error: ${data.detail}`, "no-match");
-  }
-});
-
-document.getElementById("recognize-form").addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const form = e.target;
-  const resultEl = document.getElementById("recognize-result");
-
-  const res = await fetch("/api/recognize", {
-    method: "POST",
-    body: new FormData(form),
-  });
-  const data = await res.json();
-
-  if (!res.ok) {
-    showResult(resultEl, `Error: ${data.detail}`, "no-match");
-  } else if (data.match) {
-    showResult(
-      resultEl,
-      `Match: ${data.match.name} (score ${data.match.score.toFixed(3)})`,
-      "match"
-    );
-  } else if (data.reason === "no_face_detected") {
-    showResult(resultEl, "No face detected in image", "no-match");
-  } else {
-    const scoreText =
-      data.best_score !== null && data.best_score !== undefined
-        ? ` (best score ${data.best_score.toFixed(3)})`
-        : "";
-    showResult(resultEl, `No match found${scoreText}`, "no-match");
   }
 });
 
@@ -168,7 +158,8 @@ function stopLiveScan() {
   setLiveStatus("Camera off");
 }
 
-startBtn.addEventListener("click", async () => {
+async function ensureCameraStarted() {
+  if (liveStream) return true;
   try {
     liveStream = await navigator.mediaDevices.getUserMedia({
       video: { width: 1280, height: 720 },
@@ -176,7 +167,7 @@ startBtn.addEventListener("click", async () => {
     });
   } catch (err) {
     setLiveStatus("Camera permission denied or unavailable: " + err.message);
-    return;
+    return false;
   }
   liveVideo.srcObject = liveStream;
   await liveVideo.play();
@@ -185,7 +176,28 @@ startBtn.addEventListener("click", async () => {
   stopBtn.disabled = false;
   setLiveStatus("Scanning...");
   liveScanLoop();
-});
+  return true;
+}
 
+startBtn.addEventListener("click", ensureCameraStarted);
 stopBtn.addEventListener("click", stopLiveScan);
 window.addEventListener("pagehide", stopLiveScan);
+
+// --- Capture Photo (Enroll panel) ---
+// Reuses the same live camera feed and frame-grab helper as live scanning, so
+// there's only ever one camera stream on the page.
+document.getElementById("capture-photo-btn").addEventListener("click", async () => {
+  const started = await ensureCameraStarted();
+  if (!started) return;
+
+  const blob = await captureFrameAsBlob();
+  if (!blob) {
+    setLiveStatus("Camera not ready yet — try again in a moment");
+    return;
+  }
+
+  capturedEnrollBlob = blob;
+  enrollFileInput.value = ""; // captured photo takes precedence over any chosen file
+  capturePreview.src = URL.createObjectURL(blob);
+  capturePreview.classList.remove("hidden");
+});

@@ -19,17 +19,11 @@ h1 {
   font-size: 1.5rem;
 }
 
-.panels {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  margin-bottom: 30px;
-}
-
 .panel {
   border: 1px solid #ddd;
   border-radius: 8px;
   padding: 16px;
+  margin-bottom: 20px;
 }
 
 .panel h2 {
@@ -41,6 +35,26 @@ h1 {
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+
+.enroll-image-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.enroll-image-controls button {
+  width: auto;
+}
+
+.capture-preview {
+  max-width: 160px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+}
+
+.capture-preview.hidden {
+  display: none;
 }
 
 button {

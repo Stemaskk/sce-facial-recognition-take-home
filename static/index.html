@@ -8,25 +8,19 @@
 <body>
   <h1>Face Recognition Dashboard</h1>
 
-  <div class="panels">
-    <div class="panel">
-      <h2>Enroll a Profile</h2>
-      <form id="enroll-form">
-        <input type="text" name="name" placeholder="Name" required>
-        <input type="file" name="image" accept="image/*" required>
-        <button type="submit">Enroll</button>
-      </form>
-      <div id="enroll-result" class="result hidden"></div>
-    </div>
-
-    <div class="panel">
-      <h2>Recognize</h2>
-      <form id="recognize-form">
-        <input type="file" name="image" accept="image/*" required>
-        <button type="submit">Recognize</button>
-      </form>
-      <div id="recognize-result" class="result hidden"></div>
-    </div>
+  <div class="panel">
+    <h2>Enroll a Profile</h2>
+    <form id="enroll-form">
+      <input type="text" name="name" placeholder="Name" required>
+      <div class="enroll-image-controls">
+        <input type="file" id="enroll-file-input" name="image" accept="image/*">
+        <span>or</span>
+        <button type="button" id="capture-photo-btn">Capture Photo</button>
+      </div>
+      <img id="capture-preview" class="capture-preview hidden" alt="Captured preview">
+      <button type="submit">Enroll</button>
+    </form>
+    <div id="enroll-result" class="result hidden"></div>
   </div>
 
   <div class="panel panel-live">
