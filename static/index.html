@@ -29,6 +29,19 @@
     </div>
   </div>
 
+  <div class="panel panel-live">
+    <h2>Live Scan (Webcam)</h2>
+    <div class="live-controls">
+      <button id="live-start-btn" type="button">Start Camera</button>
+      <button id="live-stop-btn" type="button" disabled>Stop Camera</button>
+      <span id="live-status" class="live-status">Camera off</span>
+    </div>
+    <div class="video-wrap" id="video-wrap">
+      <video id="live-video" autoplay playsinline muted></video>
+      <canvas id="live-overlay"></canvas>
+    </div>
+  </div>
+
   <h2>Enrolled Profiles</h2>
   <ul id="profile-list"></ul>
 

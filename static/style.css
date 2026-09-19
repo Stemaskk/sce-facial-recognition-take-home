@@ -74,6 +74,50 @@ button {
   display: none;
 }
 
+.panel-live {
+  margin-bottom: 30px;
+}
+
+.live-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.live-controls button {
+  width: auto;
+}
+
+.live-status {
+  font-size: 0.9rem;
+  color: #444;
+}
+
+.video-wrap {
+  position: relative;
+  width: 480px;
+  max-width: 100%;
+  background: #000;
+  border-radius: 8px;
+  overflow: hidden;
+  transform: scaleX(-1);
+}
+
+#live-video,
+#live-overlay {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+#live-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
+
 #profile-list {
   list-style: none;
   padding: 0;

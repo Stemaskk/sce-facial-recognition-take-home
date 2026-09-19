@@ -82,9 +82,10 @@ async def recognize(image: UploadFile = File(...)):
 
     faces = face_engine.detect_and_embed(frame)
     if len(faces) == 0:
-        return {"match": None, "reason": "no_face_detected"}
+        return {"match": None, "reason": "no_face_detected", "bbox": None}
 
     primary = max(faces, key=lambda f: f.det_score)
+    bbox = [round(v, 1) for v in primary.bbox]
     candidates = storage.all_embeddings()
     best = find_best_match(primary.embedding, candidates)
 
@@ -94,12 +95,14 @@ async def recognize(image: UploadFile = File(...)):
             "reason": "no_match",
             "best_score": best[2] if best else None,
             "faces_detected": len(faces),
+            "bbox": bbox,
         }
 
     profile_id, name, score = best
     return {
         "match": {"id": profile_id, "name": name, "score": score},
         "faces_detected": len(faces),
+        "bbox": bbox,
     }
 
 
