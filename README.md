@@ -39,6 +39,8 @@ Tools used, and why:
 Requires Python 3.10+.
 
 ```bash
+git clone https://github.com/Stemaskk/sce-facial-recognition-take-home.git
+cd sce-facial-recognition-take-home
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
@@ -61,9 +63,12 @@ uvicorn backend.main:app --reload --port 8000
 
 Then open **http://localhost:8000** in a browser. This runs entirely on your machine.
 
-- **Enroll a profile**: enter a name, choose a photo with exactly one face, click Enroll.
-- **Recognize**: choose a photo, click Recognize — shows the best-matching enrolled
-  profile and similarity score, or "no match" / "no face detected."
+- **Enroll a profile**: enter a name, then either choose a photo file or click
+  "Capture Photo" (grabs a frame from your webcam), then click Enroll.
+- **Live Scan**: click "Start Camera" and allow browser camera access — the page
+  continuously scans the feed and draws a box around the best-matching enrolled
+  profile (with similarity score), or shows "No match" / "No face detected."
+  Click "Stop Camera" when done.
 - **Enrolled Profiles**: lists everyone enrolled so far, with a Delete button for each.
 
 ## Roadmap
@@ -85,4 +90,5 @@ Solo take-home project, not open to outside contributions.
 
 ## Project Status
 
-Active — just getting started.
+Active — core pipeline (detection, embedding, matching, storage, dashboard, live
+webcam scanning) is complete. FPGA acceleration remains an open stretch goal.
